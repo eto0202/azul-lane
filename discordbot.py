@@ -196,4 +196,5 @@ async def nowevent():
     )
     await client.say(embed= msg)
 
-print(os.environ.get('DISCORD_TOKEN'))
+DISCORD_TOKEN = os.environ.get('DISCORD_TOKEN')
+client.run(DISCORD_TOKEN)
