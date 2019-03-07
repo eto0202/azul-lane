@@ -24,7 +24,7 @@ async def on_ready():
 
 
 @client.command()
-async def kansen(self, ctx):
+async def kansen(ctx):
     mess = urllib.parse.quote(ctx, encoding='euc-jp')
     res = requests.get("http://azurlane.wikiru.jp/index.php?" + mess)
     time.sleep(1)
@@ -124,11 +124,11 @@ async def kansen(self, ctx):
     embed.add_field(name= '**・スキル**', value= tt[5], inline= False)
     embed.add_field(name= '**・URL**', value= tt[4], inline= False)
 
-    await self.send(embed=embed)
+    await client.say(embed=embed)
 
 
 @client.command()
-async def nowevent(ctx):
+async def nowevent():
     res = requests.get("http://azurlane.wikiru.jp/index.php?%A5%A4%A5%D9%A5%F3%A5%C8%B0%EC%CD%F7")
     time.sleep(1)
     soup = bs4.BeautifulSoup(res.text, 'html.parser')
@@ -164,15 +164,15 @@ async def nowevent(ctx):
         description= main_data,
         colour=0x546e7a
     )
-    await ctx.send(embed= msg)
+    await client.say(embed= msg)
 
 client.remove_command('help')
 @client.command()
-async def help(ctx):
+async def help():
     embed = discord.Embed(title='アズレン Wiki bot', description='アズレンWikiの情報をまとめたBotです。\nhttp://azurlane.wikiru.jp/\n※現在開発中')
     embed.add_field(name='!kansen キャラ名(正式名称)', value='キャラクター検索ができます。', inline= False)
     embed.add_field(name='!nowevent', value='現在開催中のイベントを参照できます。',inline= False)
-    await ctx.send(embed=embed)
+    await lient.say(embed=embed)
 
 DISCORD_TOKEN = os.environ.get('DISCORD_TOKEN')
 client.run(DISCORD_TOKEN)
