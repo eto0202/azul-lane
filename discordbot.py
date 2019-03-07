@@ -168,7 +168,7 @@ async def nowevent(ctx):
 
 client.remove_command('help')
 @client.command()
-async def help (ctx):
+async def help(ctx):
     embed = discord.Embed(title='アズレン Wiki bot', description='アズレンWikiの情報をまとめたBotです。\nhttp://azurlane.wikiru.jp/\n※現在開発中')
     embed.add_field(name='!kansen キャラ名(正式名称)', value='キャラクター検索ができます。', inline= False)
     embed.add_field(name='!nowevent', value='現在開催中のイベントを参照できます。',inline= False)
