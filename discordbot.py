@@ -14,11 +14,7 @@ import bs4
 import re
 import unicodedata
 
-desc='''このボットは開発途中です！
-        「!kansen キャラ名」でキャラ情報参照
-        「!nowevent」で現在開催中のイベントを表示 '''
-
-client = commands.Bot(command_prefix='!',description=desc)
+client = commands.Bot(command_prefix='!')
 
 
 @client.event
@@ -28,8 +24,8 @@ async def on_ready():
 
 
 @client.command()
-async def kansen(ctx):
-    mess = urllib.parse.quote(ctx, encoding= 'euc-jp')
+async def kansen(self, ctx):
+    mess = urllib.parse.quote(ctx, encoding='euc-jp')
     res = requests.get("http://azurlane.wikiru.jp/index.php?" + mess)
     time.sleep(1)
     soup = bs4.BeautifulSoup(res.text, 'lxml')
@@ -47,7 +43,7 @@ async def kansen(ctx):
     del list_jp[37:index_del]
     list_jp.append(unicodedata.normalize('NFKC', list_jp[-1]))
     del list_jp[-2]
-    msg1 = discord.Embed(title= list_jp[1],
+    embed = discord.Embed(title= list_jp[1],
         description= '**図鑑番号**：'+ find_th +'\n'+
         '**レアリティ**：'+ list_jp[2] +'\n'+
         '**艦種**：'+ list_jp[3] +'\n'+
@@ -57,109 +53,82 @@ async def kansen(ctx):
         '**イラスト**：'+ list_jp[7] +'\n\n',
         colour=0x546e7a
         )
-    msg2 = discord.Embed(description=
-        '**耐久**：'+ list_jp[8] +'\n'+
-        '**火力**：'+ list_jp[9] +'\n'+
-        '**雷装**：'+ list_jp[10] +'\n'+
-        '**回避**：'+ list_jp[11] +'\n'+
-        '**対空**：'+ list_jp[12] +'\n'+
-        '**航空**：'+ list_jp[13] +'\n'+
-        '**速力**：'+ list_jp[14] +'\n\n',
-        colour=0x546e7a
-        )
-    msg3 = discord.Embed(description=
-        '**【自己紹介】**'+'\n'+ list_jp[16] +'\n\n'+
-        '**【入手方法】**'+'\n'+ list_jp[17] +'\n\n',
-        colour=0x546e7a
-        )
-    msg4 = discord.Embed(description=
-        '**『ステータス(1Lv/100lv)』**'+'\n'+
-        '**耐久**：'+ list_jp[18] +'/'+ list_jp[19] +'\n'+
-        '**装甲**：'+ list_jp[20] +'\n'+
-        '**装填**：'+ list_jp[21] +'/'+ list_jp[22] +'\n'+
-        '**火力**：'+ list_jp[23] +'/'+ list_jp[24] +'\n'+
-        '**雷装**：'+ list_jp[25] +'/'+ list_jp[26] +'\n'+
-        '**回避**：'+ list_jp[27] +'/'+ list_jp[28] +'\n'+
-        '**対空**：'+ list_jp[29] +'/'+ list_jp[30] +'\n'+
-        '**航空**：'+ list_jp[31] +'/'+ list_jp[32] +'\n'+
-        '**消費**：'+ list_jp[33] +'/'+ list_jp[34] +'\n'+
-        '**対潜**：'+ list_jp[35] +'/'+ list_jp[36] +'\n\n',
-        colour=0x546e7a
-        )
+
+    filed_1 ='**耐久**：'+ list_jp[8] +'\n'+ \
+             '**火力**：'+ list_jp[9] +'\n'+ \
+             '**雷装**：'+ list_jp[10] +'\n'+ \
+             '**回避**：'+ list_jp[11] +'\n'+ \
+             '**対空**：'+ list_jp[12] +'\n'+ \
+             '**航空**：'+ list_jp[13] +'\n'+ \
+             '**速力**：'+ list_jp[14] +'\n\n'
+
+    filed_2 =list_jp[16]
+
+    filed_3 =list_jp[17] +'\n\n'
+
+    filed_4 ='**耐久**：'+ list_jp[18] +'/'+ list_jp[19] +'\n'+ \
+             '**装甲**：'+ list_jp[20] +'\n'+ \
+             '**装填**：'+ list_jp[21] +'/'+ list_jp[22] +'\n'+ \
+             '**火力**：'+ list_jp[23] +'/'+ list_jp[24] +'\n'+ \
+             '**雷装**：'+ list_jp[25] +'/'+ list_jp[26] +'\n'+ \
+             '**回避**：'+ list_jp[27] +'/'+ list_jp[28] +'\n'+ \
+             '**対空**：'+ list_jp[29] +'/'+ list_jp[30] +'\n'+ \
+             '**航空**：'+ list_jp[31] +'/'+ list_jp[32] +'\n'+ \
+             '**消費**：'+ list_jp[33] +'/'+ list_jp[34] +'\n'+ \
+             '**対潜**：'+ list_jp[35] +'/'+ list_jp[36] +'\n\n'
+
+    filed_5 ='http://azurlane.wikiru.jp/index.php?' + mess
+
     tt = []
+    tt = [filed_1, filed_2, filed_3, filed_4, filed_5]
+
+    if len(list_jp) == 40:
+        filed_6 ='**『'+ list_jp[38] +'』**'+'\n'+ list_jp[39] +'\n'
+        tt.append(filed_6)
+
+    elif len(list_jp) == 43:
+        filed_6 ='**『'+ list_jp[38] +'』**'+'\n'+ list_jp[39] +'\n\n'+ \
+                 '**『'+ list_jp[41] +'』**'+'\n'+ list_jp[42] +'\n'
+        tt.append(filed_6)
+
+    elif len(list_jp) == 46:
+        filed_6 ='**『'+ list_jp[38] +'』**'+'\n'+ list_jp[39] +'\n\n'+ \
+                 '**『'+ list_jp[41] +'』**'+'\n'+ list_jp[42] +'\n\n'+ \
+                 '**『'+ list_jp[44] +'』**'+'\n'+ list_jp[45] +'\n'
+        tt.append(filed_6)
+
+    elif len(list_jp) == 49:
+        filed_6 ='**『'+ list_jp[38] +'』**'+'\n'+ list_jp[39] +'\n\n'+ \
+                 '**『'+ list_jp[41] +'』**'+'\n'+ list_jp[42] +'\n\n'+ \
+                 '**『'+ list_jp[44] +'』**'+'\n'+ list_jp[45] +'\n\n'+ \
+                 '**『'+ list_jp[47] +'』**'+'\n'+ list_jp[48] +'\n'
+        tt.append(filed_6)
+
+    elif len(list_jp) == 52:
+        filed_6 ='**『'+ list_jp[38] +'』**'+'\n'+ list_jp[39] +'\n\n'+ \
+                 '**『'+ list_jp[41] +'』**'+'\n'+ list_jp[42] +'\n\n'+ \
+                 '**『'+ list_jp[44] +'』**'+'\n'+ list_jp[45] +'\n\n'+ \
+                 '**『'+ list_jp[47] +'』**'+'\n'+ list_jp[48] +'\n\n'+ \
+                 '**『'+ list_jp[50] +'』**'+'\n'+ list_jp[51] +'\n'
+        tt.append(filed_6)
+
     table = str.maketrans({'%':''})
     result = mess.translate(table)
-    p = "http://azurlane.wikiru.jp/attach2/" + result + '_' + result +'2E6A7067.jpg'
-    pp = "http://azurlane.wikiru.jp/attach2/" + result + '_' + result +'C1B4BFC82E6A7067.jpg'
-    msg1.set_image(url= p)
-    msg2.set_image(url=pp)
-    tt = [msg1, msg2, msg3, msg4]
-    if len(list_jp) == 40:
-        msg5 = discord.Embed(description=
-        '**『'+ list_jp[38] +'』**'+'\n'+ list_jp[39] +'\n'+
-        'http://azurlane.wikiru.jp/index.php?' + mess,
-        colour=0x546e7a
-        )
-        tt.append(msg5)
-    elif len(list_jp) == 43:
-        msg6 = discord.Embed(description=
-        '**『'+ list_jp[38] +'』**'+'\n'+ list_jp[39] +'\n\n'+
-        '**『'+ list_jp[41] +'』**'+'\n'+ list_jp[42] +'\n'+
-        'http://azurlane.wikiru.jp/index.php?' + mess,
-        colour=0x546e7a
-        )
-        tt.append(msg6)
-    elif len(list_jp) == 46:
-        msg7 = discord.Embed(description=
-        '**『'+ list_jp[38] +'』**'+'\n'+ list_jp[39] +'\n\n'+
-        '**『'+ list_jp[41] +'』**'+'\n'+ list_jp[42] +'\n\n'+
-        '**『'+ list_jp[44] +'』**'+'\n'+ list_jp[45] +'\n'+
-        'http://azurlane.wikiru.jp/index.php?' + mess,
-        colour=0x546e7a
-        )
-        tt.append(msg7)
-    elif len(list_jp) == 49:
-        msg8 = discord.Embed(description=
-        '**『'+ list_jp[38] +'』**'+'\n'+ list_jp[39] +'\n\n'+
-        '**『'+ list_jp[41] +'』**'+'\n'+ list_jp[42] +'\n\n'+
-        '**『'+ list_jp[44] +'』**'+'\n'+ list_jp[45] +'\n\n'+
-        '**『'+ list_jp[47] +'』**'+'\n'+ list_jp[48] +'\n'+
-        'http://azurlane.wikiru.jp/index.php?' + mess,
-        colour=0x546e7a
-        )
-        tt.append(msg8)
-    elif len(list_jp) == 52:
-        msg9 = discord.Embed(description=
-        '**『'+ list_jp[38] +'』**'+'\n'+ list_jp[39] +'\n\n'+
-        '**『'+ list_jp[41] +'』**'+'\n'+ list_jp[42] +'\n\n'+
-        '**『'+ list_jp[44] +'』**'+'\n'+ list_jp[45] +'\n\n'+
-        '**『'+ list_jp[47] +'』**'+'\n'+ list_jp[48] +'\n\n'+
-        '**『'+ list_jp[50] +'』**'+'\n'+ list_jp[51] +'\n'+
-        'http://azurlane.wikiru.jp/index.php?' + mess,
-        colour=0x546e7a
-        )
-        tt.append(msg9)
-    mes = await client.say(embed=tt[0])
-    await client.add_reaction(mes, '◀')
-    await client.add_reaction(mes, '▶')
-    while True:
-            target_reaction = await client.wait_for_reaction(message=mes)
-            if target_reaction.user != mes.author:
-                    if target_reaction.reaction.emoji =='◀':
-                            tt.insert(0, tt[-1])
-                            del tt[-1]
-                            await client.edit_message(mes, embed=tt[0])
-                    elif target_reaction.reaction.emoji =='▶':
-                            await client.edit_message(mes, embed=tt[0])
-                            tt.append(tt[0])
-                            del tt[0]
-                    else:
-                            pass
-                    await client.remove_reaction(mes, \
-                    target_reaction.reaction.emoji, target_reaction.user)
+    embed.set_image(url= "http://azurlane.wikiru.jp/attach2/" + result + '_' + result +'2E6A7067.jpg')
+    embed.set_thumbnail(url="http://azurlane.wikiru.jp/attach2/" + result + '_' + result +'2E676966.gif')
+
+    embed.add_field(name= '**・ステータス**', value= tt[0], inline= False)
+    embed.add_field(name= '**・自己紹介**', value= tt[1], inline= False)
+    embed.add_field(name= '**・入手方法**', value= tt[2], inline= False)
+    embed.add_field(name= '**・ステータス(1Lv/100Lv)**', value= tt[3], inline= False)
+    embed.add_field(name= '**・スキル**', value= tt[5], inline= False)
+    embed.add_field(name= '**・URL**', value= tt[4], inline= False)
+
+    await self.send(embed=embed)
+
 
 @client.command()
-async def nowevent():
+async def nowevent(ctx):
     res = requests.get("http://azurlane.wikiru.jp/index.php?%A5%A4%A5%D9%A5%F3%A5%C8%B0%EC%CD%F7")
     time.sleep(1)
     soup = bs4.BeautifulSoup(res.text, 'html.parser')
@@ -171,12 +140,13 @@ async def nowevent():
     split_list = list_jp[0].splitlines()
     time_list = []
     for split_list2 in split_list[0:]:
-        time_data = re.findall(r'[0-9]{4}.*で', split_list2)
-        time_list.append(time_data[0])
+        time_data = re.findall(r'[0-9]{4}.*テ', split_list2)
+        time_list.extend(time_data)
     print(time_list)
     event_name = []
     for x in split_list:
-            x_sub = re.sub(r'\([0-9]{4}.*で\)', '', x)
+            x_sub = re.sub(r'[0-9]{4}.*テ', '', x)
+            x_sub = x_sub[:-2]
             event_name.append(x_sub)
     print(event_name)
     url = search.select('ul a')
@@ -194,7 +164,15 @@ async def nowevent():
         description= main_data,
         colour=0x546e7a
     )
-    await client.say(embed= msg)
+    await ctx.send(embed= msg)
+
+client.remove_command('help')
+@client.command()
+async def help (ctx):
+    embed = discord.Embed(title='アズレン Wiki bot', description='アズレンWikiの情報をまとめたBotです。\nhttp://azurlane.wikiru.jp/\n※現在開発中')
+    embed.add_field(name='!kansen キャラ名(正式名称)', value='キャラクター検索ができます。', inline= False)
+    embed.add_field(name='!nowevent', value='現在開催中のイベントを参照できます。',inline= False)
+    await ctx.send(embed=embed)
 
 DISCORD_TOKEN = os.environ.get('DISCORD_TOKEN')
 client.run(DISCORD_TOKEN)
