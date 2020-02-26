@@ -1,1 +1,1 @@
-# azul-lane
+This bot for discord
